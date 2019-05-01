@@ -107,3 +107,50 @@ delete
 from jyxx
 where duzbh=N'00001001' and tusbh=N'10010001';
 go
+
+
+declare @sno char(9),@sname char(8)
+set @sno=N'200215121'
+select @sname=sname from student where sno=@sno
+print @sname
+
+if (select avg(grade) from sc where sno=@sno)>85
+print @sname+'考出了高分'
+else 
+print @sname+'考得一般'
+
+select [性别]=
+case 
+when ssex=N'男' then N'男生'
+when ssex=N'女' then N'女生'
+else N'条件不明'
+end,
+sno [学号],sname [姓名],sage [年龄],sdept [院系]
+from student
+go
+
+select [院系]=
+case
+when sdept='CS' then N'计算机系'
+when sdept='IS' then N'信息系'
+when sdept='MA' then N'数学系'
+when sdept='EN' then N'外语系'
+when sdept='CM' then N'中医系'
+when sdept='WM' then N'西医系'
+else N'院系不明'
+end,
+sno [学号],sname [姓名],ssex [性别],sage [年龄]
+from student
+order by sdept desc;
+
+select sdept [院系],[院系规模] =
+case
+when count(*) >=5 then N'规模很大'
+when count(*) >=4 then N'规模一般'
+when count(*) <4 and count(*)>=2 then N'规模稍小'
+else N'规模很小'
+end
+from student
+group by sdept
+having sdept <> '' and sdept is not NULL;
+go
